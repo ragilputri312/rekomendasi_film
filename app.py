@@ -359,19 +359,33 @@ elif selected_menu == "📊 Dataset & Visualisasi":
         col1, col2 = st.columns(2)
         
         with col1:
-            # Grafik distribusi rating
-            fig = px.histogram(df, x="Rating", nbins=20, 
+            # Grafik distribusi rating (berdasarkan film unik)
+            fig = px.histogram(film_data, x="Rating", nbins=20, 
                              title="Distribusi Rating Film",
                              color_discrete_sequence=["#2b2d42"])
-            fig.update_layout(showlegend=False)
+            fig.update_layout(
+                showlegend=False,
+                yaxis_title="Banyak Film",
+                xaxis_title="Rating"
+            )
+            # Format angka tanpa "k" di belakang
+            fig.update_layout(
+                yaxis=dict(tickformat=".0f"),
+                xaxis=dict(tickformat=".1f")
+            )
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
             # Grafik jumlah film per tahun
-            yearly_counts = df.groupby("Year").size().reset_index(name="Jumlah Film")
+            yearly_counts = film_data.groupby("Year").size().reset_index(name="Jumlah Film")
             fig2 = px.bar(yearly_counts, x="Year", y="Jumlah Film", 
                          title="Jumlah Film per Tahun",
                          color_discrete_sequence=["#ef233c"])
+            fig2.update_layout(
+                yaxis_title="Banyak Film",
+                xaxis_title="Tahun",
+                yaxis=dict(tickformat=".0f")
+            )
             st.plotly_chart(fig2, use_container_width=True)
 
         # Film dengan rating tertinggi
